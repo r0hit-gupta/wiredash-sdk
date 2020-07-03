@@ -69,10 +69,16 @@ class WiredashLocalizedTranslations extends WiredashTranslations {
   @override
   String get inputHintFeedback => "Your feedback";
   @override
+  String get inputHintFeedbackTitle => "Issue title";
+  @override
   String get validationHintEmail =>
       "Please enter a valid email or leave this field blank.";
   @override
   String get validationHintFeedbackEmpty => "Please provide your feedback.";
+  @override
+  String get validationHintFeedbackTitleEmpty => "Please add an issue title.";
+  @override
+  String get validationHintFeedbackTitleLength => "Issue title is too long.";
   @override
   String get validationHintFeedbackLength => "Your feedback is too long.";
   @override

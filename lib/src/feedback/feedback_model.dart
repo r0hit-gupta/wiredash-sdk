@@ -23,6 +23,7 @@ class FeedbackModel with ChangeNotifier {
 
   FeedbackType feedbackType = FeedbackType.bug;
   String feedbackMessage;
+  String feedbackTitle;
   Uint8List screenshot;
 
   FeedbackUiState _feedbackUiState = FeedbackUiState.hidden;
@@ -59,7 +60,7 @@ class FeedbackModel with ChangeNotifier {
       case FeedbackUiState.capture:
         _captureKey.currentState.show().then((image) {
           screenshot = image;
-          _feedbackUiState = FeedbackUiState.feedback;
+          _feedbackUiState = FeedbackUiState.feedbackTitle;
           _navigatorKey.currentState.push(
             DismissiblePageRoute(
               builder: (context) => FeedbackSheet(),
@@ -81,6 +82,7 @@ class FeedbackModel with ChangeNotifier {
 
   void _clearFeedback() {
     feedbackMessage = null;
+    feedbackTitle = null;
     screenshot = null;
   }
 
@@ -93,6 +95,7 @@ class FeedbackModel with ChangeNotifier {
       deviceInfo: DeviceInfo.generate(_buildInfoManager),
       email: _userManager.userEmail,
       message: feedbackMessage,
+      title: feedbackTitle,
       picture: screenshot,
       type: feedbackType.label,
       user: _userManager.userId,
@@ -161,4 +164,12 @@ extension FeedbackTypeMembers on FeedbackType {
       }[this];
 }
 
-enum FeedbackUiState { hidden, intro, capture, feedback, email, success }
+enum FeedbackUiState {
+  hidden,
+  intro,
+  capture,
+  feedbackTitle,
+  feedback,
+  email,
+  success
+}

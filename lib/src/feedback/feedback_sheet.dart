@@ -23,13 +23,16 @@ class _FeedbackSheetState extends State<FeedbackSheet>
     with SingleTickerProviderStateMixin, WidgetsBindingObserver {
   final _emailFormKey = GlobalKey<FormState>();
   final _feedbackFormKey = GlobalKey<FormState>();
+  final _feedbackTitleFormKey = GlobalKey<FormState>();
 
   final _feedbackFocusNode = FocusNode();
+  final _feedbackTitleFocusNode = FocusNode();
   final _emailFocusNode = FocusNode();
 
   @override
   void dispose() {
     _feedbackFocusNode.dispose();
+    _feedbackTitleFocusNode.dispose();
     _emailFocusNode.dispose();
     super.dispose();
   }
@@ -154,7 +157,7 @@ class _FeedbackSheetState extends State<FeedbackSheet>
     final state = Provider.of<FeedbackModel>(context);
 
     switch (state.feedbackUiState) {
-      case FeedbackUiState.feedback:
+      case FeedbackUiState.feedbackTitle:
         return Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: <Widget>[
@@ -166,6 +169,23 @@ class _FeedbackSheetState extends State<FeedbackSheet>
             ),
             SimpleButton(
               text: WiredashLocalizations.of(context).feedbackSave,
+              icon: WiredashIcons.right,
+              onPressed: _askForFeedbackMessage,
+            ),
+          ],
+        );
+      case FeedbackUiState.feedback:
+        return Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: <Widget>[
+            SimpleButton(
+              text: WiredashLocalizations.of(context).feedbackCancel,
+              onPressed: () {
+                state.feedbackUiState = FeedbackUiState.intro;
+              },
+            ),
+            SimpleButton(
+              text: WiredashLocalizations.of(context).feedbackSend,
               icon: WiredashIcons.right,
               onPressed: _submitFeedback,
             ),
@@ -191,11 +211,19 @@ class _FeedbackSheetState extends State<FeedbackSheet>
     }
   }
 
+  void _askForFeedbackMessage() {
+    if (_feedbackTitleFormKey.currentState.validate()) {
+      _feedbackTitleFormKey.currentState.save();
+      Provider.of<FeedbackModel>(context, listen: false).feedbackUiState =
+          FeedbackUiState.feedback;
+    }
+  }
+
   void _submitFeedback() {
     if (_feedbackFormKey.currentState.validate()) {
       _feedbackFormKey.currentState.save();
       Provider.of<FeedbackModel>(context, listen: false).feedbackUiState =
-          FeedbackUiState.email;
+          FeedbackUiState.success;
     }
   }
 
@@ -229,6 +257,7 @@ class _FeedbackSheetState extends State<FeedbackSheet>
     switch (Provider.of<FeedbackModel>(context).feedbackUiState) {
       case FeedbackUiState.intro:
         return WiredashLocalizations.of(context).feedbackStateIntroTitle;
+      case FeedbackUiState.feedbackTitle:
       case FeedbackUiState.feedback:
         return WiredashLocalizations.of(context).feedbackStateFeedbackTitle;
       case FeedbackUiState.email:
@@ -244,6 +273,7 @@ class _FeedbackSheetState extends State<FeedbackSheet>
     switch (Provider.of<FeedbackModel>(context).feedbackUiState) {
       case FeedbackUiState.intro:
         return WiredashLocalizations.of(context).feedbackStateIntroMsg;
+      case FeedbackUiState.feedbackTitle:
       case FeedbackUiState.feedback:
         return WiredashLocalizations.of(context).feedbackStateFeedbackMsg;
       case FeedbackUiState.email:
@@ -257,8 +287,10 @@ class _FeedbackSheetState extends State<FeedbackSheet>
 
   double _getProgressValue() {
     switch (Provider.of<FeedbackModel>(context).feedbackUiState) {
+      case FeedbackUiState.feedbackTitle:
+        return 0.5;
       case FeedbackUiState.feedback:
-        return 0.3;
+        return 0.8;
       case FeedbackUiState.email:
         return 0.8;
       case FeedbackUiState.success:
@@ -274,6 +306,15 @@ class _FeedbackSheetState extends State<FeedbackSheet>
     switch (uiState) {
       case FeedbackUiState.intro:
         return IntroComponent(_onFeedbackModeSelected);
+      case FeedbackUiState.feedbackTitle:
+        return InputComponent(
+          key: ValueKey(uiState),
+          type: InputComponentType.feedbackTitle,
+          formKey: _feedbackTitleFormKey,
+          focusNode: _feedbackTitleFocusNode,
+          prefill: feedbackModel.feedbackTitle,
+          autofocus: _feedbackFocusNode.hasFocus,
+        );
       case FeedbackUiState.feedback:
         return InputComponent(
           key: ValueKey(uiState),
@@ -281,7 +322,7 @@ class _FeedbackSheetState extends State<FeedbackSheet>
           formKey: _feedbackFormKey,
           focusNode: _feedbackFocusNode,
           prefill: feedbackModel.feedbackMessage,
-          autofocus: _emailFocusNode.hasFocus,
+          autofocus: _feedbackTitleFocusNode.hasFocus,
         );
       case FeedbackUiState.email:
         return InputComponent(

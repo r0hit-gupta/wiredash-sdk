@@ -8,7 +8,7 @@ import 'package:wiredash/src/common/user/user_manager.dart';
 import 'package:wiredash/src/common/widgets/wiredash_icons.dart';
 import 'package:wiredash/src/feedback/feedback_model.dart';
 
-enum InputComponentType { feedback, email }
+enum InputComponentType { feedbackTitle, feedback, email }
 
 class InputComponent extends StatefulWidget {
   final InputComponentType type;
@@ -107,6 +107,7 @@ class _InputComponentState extends State<InputComponent> {
 
   TextCapitalization _getTextCapitalization() {
     switch (widget.type) {
+      case InputComponentType.feedbackTitle:
       case InputComponentType.feedback:
         return TextCapitalization.sentences;
         break;
@@ -118,6 +119,7 @@ class _InputComponentState extends State<InputComponent> {
 
   TextInputType _getKeyboardType() {
     switch (widget.type) {
+      case InputComponentType.feedbackTitle:
       case InputComponentType.feedback:
         return TextInputType.text;
         break;
@@ -129,6 +131,7 @@ class _InputComponentState extends State<InputComponent> {
 
   IconData _getIcon() {
     switch (widget.type) {
+      case InputComponentType.feedbackTitle:
       case InputComponentType.feedback:
         return WiredashIcons.edit;
       case InputComponentType.email:
@@ -140,6 +143,8 @@ class _InputComponentState extends State<InputComponent> {
 
   String _getHintText() {
     switch (widget.type) {
+      case InputComponentType.feedbackTitle:
+        return WiredashLocalizations.of(context).inputHintFeedbackTitle;
       case InputComponentType.feedback:
         return WiredashLocalizations.of(context).inputHintFeedback;
       case InputComponentType.email:
@@ -151,9 +156,18 @@ class _InputComponentState extends State<InputComponent> {
 
   String _validateInput(String input) {
     switch (widget.type) {
+      case InputComponentType.feedbackTitle:
+        if (input.isEmpty) {
+          return WiredashLocalizations.of(context)
+              .validationHintFeedbackTitleEmpty;
+        } else if (input.length > 128) {
+          return WiredashLocalizations.of(context)
+              .validationHintFeedbackTitleLength;
+        }
+        break;
       case InputComponentType.feedback:
         if (input.isEmpty) {
-          return WiredashLocalizations.of(context).validationHintFeedbackEmpty;
+          return null;
         } else if (input.length > 512) {
           return WiredashLocalizations.of(context).validationHintFeedbackLength;
         }
@@ -172,6 +186,10 @@ class _InputComponentState extends State<InputComponent> {
 
   void _handleInput(String input) {
     switch (widget.type) {
+      case InputComponentType.feedbackTitle:
+        Provider.of<FeedbackModel>(context, listen: false).feedbackTitle =
+            input;
+        break;
       case InputComponentType.feedback:
         Provider.of<FeedbackModel>(context, listen: false).feedbackMessage =
             input;

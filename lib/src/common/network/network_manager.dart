@@ -19,13 +19,15 @@ class NetworkManager {
   static const String _parameterUser = 'user';
 
   static const String _parameterFeedbackMessage = 'message';
+  static const String _parameterFeedbackTitle = 'title';
   static const String _parameterFeedbackScreenshot = 'file';
   static const String _parameterFeedbackType = 'type';
 
   Future<void> sendFeedback({
     @required Map<String, dynamic> deviceInfo,
     String email,
-    @required String message,
+    String message,
+    @required String title,
     Map<String, dynamic> payload,
     Uint8List picture,
     @required String type,
@@ -47,9 +49,11 @@ class NetworkManager {
       arguments: {
         _parameterDeviceInfo: json.encode(deviceInfo),
         if (email != null) _parameterEmail: email,
-        _parameterFeedbackMessage: message,
+        if (_parameterFeedbackMessage != null)
+          _parameterFeedbackMessage: message,
         if (payload != null) _parameterPayload: json.encode(payload),
         _parameterFeedbackType: type,
+        _parameterFeedbackTitle: title,
         if (user != null) _parameterUser: user
       },
       files: [screenshotFile],

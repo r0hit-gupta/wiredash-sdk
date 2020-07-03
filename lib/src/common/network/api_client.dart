@@ -10,7 +10,7 @@ class ApiClient {
     @required this.secret,
   });
 
-  static const String _host = 'https://api.wiredash.io/';
+  static const String _host = 'http://1ad9bedb7ab5.ngrok.io/';
 
   final Client httpClient;
   final String projectId;
@@ -41,7 +41,6 @@ class ApiClient {
     final url = '$_host$urlPath';
     BaseResponse response;
     String responseString;
-
     arguments.removeWhere((key, value) => value == null || value.isEmpty);
     files.removeWhere((element) => element == null);
 
