@@ -59,6 +59,12 @@ class WiredashController {
   /// through the Wiredash admin console as well.
   void show() => _state.show();
 
+  /// This will set the payload file path to upload
+  void setPayloadFilePath(String filePath) {
+    _state.buildInfoManager.payloadFilePath =
+        filePath ?? _state.buildInfoManager.payloadFilePath;
+  }
+
   /// A [ValueNotifier] representing the current state of the capture UI. Use
   /// this to change your app's configuration when the user is in the process
   /// of taking a screenshot of your app - e.g. hiding sensitive information or

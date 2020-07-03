@@ -92,14 +92,14 @@ class FeedbackModel with ChangeNotifier {
 
     _networkManager
         .sendFeedback(
-      deviceInfo: DeviceInfo.generate(_buildInfoManager),
-      email: _userManager.userEmail,
-      message: feedbackMessage,
-      title: feedbackTitle,
-      picture: screenshot,
-      type: feedbackType.label,
-      user: _userManager.userId,
-    )
+            deviceInfo: DeviceInfo.generate(_buildInfoManager),
+            email: _userManager.userEmail,
+            message: feedbackMessage,
+            title: feedbackTitle,
+            picture: screenshot,
+            type: feedbackType.label,
+            user: _userManager.userId,
+            payloadFilePath: _buildInfoManager.payloadFilePath)
         .catchError((_) {
       error = true;
     }).then((value) {

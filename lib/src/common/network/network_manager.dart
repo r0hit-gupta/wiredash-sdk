@@ -28,12 +28,13 @@ class NetworkManager {
     String email,
     String message,
     @required String title,
-    Map<String, dynamic> payload,
+    String payloadFilePath,
     Uint8List picture,
     @required String type,
     String user,
   }) async {
     MultipartFile screenshotFile;
+    MultipartFile payloadFile;
 
     if (picture != null) {
       screenshotFile = MultipartFile.fromBytes(
@@ -43,20 +44,28 @@ class NetworkManager {
         contentType: MediaType('image', 'png'),
       );
     }
+    if (payloadFilePath != null) {
+      payloadFile = await MultipartFile.fromPath(
+        _parameterPayload,
+        payloadFilePath,
+      );
+    }
 
     await _apiClient.post(
       urlPath: _feedbackPath,
       arguments: {
         _parameterDeviceInfo: json.encode(deviceInfo),
-        if (email != null) _parameterEmail: email,
+        if (email != null)
+          _parameterEmail: email,
         if (_parameterFeedbackMessage != null)
           _parameterFeedbackMessage: message,
-        if (payload != null) _parameterPayload: json.encode(payload),
+        // if (payload != null) _parameterPayload: json.encode(payload),
         _parameterFeedbackType: type,
         _parameterFeedbackTitle: title,
-        if (user != null) _parameterUser: user
+        if (user != null)
+          _parameterUser: user
       },
-      files: [screenshotFile],
+      files: [screenshotFile, payloadFile],
     );
   }
 }

@@ -15,4 +15,6 @@ class BuildInfoManager {
   set buildNumber(String s) => _buildNumber = s;
 
   String get buildCommit => buildInfo.buildCommit;
+
+  String payloadFilePath;
 }
