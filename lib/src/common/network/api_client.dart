@@ -10,7 +10,8 @@ class ApiClient {
     @required this.secret,
   });
 
-  static const String _host = 'http://1ad9bedb7ab5.ngrok.io/';
+  // static const String _host = 'http://localhost:5001/wiredash-75f17/us-central1/app';
+  static const String _host = 'https://us-central1-wiredash-75f17.cloudfunctions.net/app/';
 
   final Client httpClient;
   final String projectId;
@@ -19,8 +20,8 @@ class ApiClient {
   Future<Map<String, dynamic>> get(String urlPath) async {
     final url = '$_host$urlPath';
     final BaseResponse response = await httpClient.get(url, headers: {
-      'project': 'Project $projectId',
-      'authorization': 'Secret $secret'
+      'project': projectId,
+      'authorization': secret
     });
     final responseString = utf8.decode((response as Response).bodyBytes);
     if (response.statusCode != 200) {
@@ -48,8 +49,8 @@ class ApiClient {
       final multipartRequest = MultipartRequest('POST', Uri.parse(url))
         ..fields.addAll(arguments)
         ..files.addAll(files);
-      multipartRequest.headers['project'] = 'Project $projectId';
-      multipartRequest.headers['authorization'] = 'Secret $secret';
+      multipartRequest.headers['project'] = projectId;
+      multipartRequest.headers['authorization'] = secret;
 
       response = await multipartRequest.send();
       responseString =
@@ -58,8 +59,8 @@ class ApiClient {
       response = await httpClient.post(
         url,
         headers: {
-          'project': 'Project $projectId',
-          'authorization': 'Secret $secret'
+          'project': projectId,
+          'authorization': secret
         },
         body: arguments,
       );
