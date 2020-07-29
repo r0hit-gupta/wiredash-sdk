@@ -19,31 +19,32 @@ class DeviceInfo {
       uiValues['buildCommit'] = buildInfo.buildCommit;
     }
     if (buildInfo.deviceId != null) {
-      uiValues['deviceId'] = buildInfo.deviceId;
+      // uiValues['deviceId'] = buildInfo.deviceId;
     }
 
     uiValues['locale'] = ui.window.locale.toString();
-    uiValues['padding'] = [
-      ui.window.padding.left,
-      ui.window.padding.top,
-      ui.window.padding.right,
-      ui.window.padding.bottom
-    ];
+    // uiValues['padding'] = [
+    //   ui.window.padding.left,
+    //   ui.window.padding.top,
+    //   ui.window.padding.right,
+    //   ui.window.padding.bottom
+    // ];
     uiValues['physicalSize'] = [
       ui.window.physicalSize.width,
-      ui.window.physicalSize.height
+      ui.window.physicalSize.height,
+      ' | Pixel Ratio - ${ui.window.devicePixelRatio}'
     ];
-    uiValues['pixelRatio'] = ui.window.devicePixelRatio;
-    uiValues['platformOS'] = Platform.operatingSystem;
-    uiValues['platformOSBuild'] = Platform.operatingSystemVersion;
-    uiValues['platformVersion'] = Platform.version;
     uiValues['textScaleFactor'] = ui.window.textScaleFactor;
-    uiValues['viewInsets'] = [
-      ui.window.viewInsets.left,
-      ui.window.viewInsets.top,
-      ui.window.viewInsets.right,
-      ui.window.viewInsets.bottom
-    ];
+    // uiValues['pixelRatio'] = ui.window.devicePixelRatio;
+    uiValues['platformOS'] = '${Platform.operatingSystem} | ${Platform.operatingSystemVersion}';
+    // uiValues['platformOSBuild'] = '${Platform.operatingSystem} | ${Platform.operatingSystemVersion}';
+    uiValues['dartVersion'] = Platform.version;
+    // uiValues['viewInsets'] = [
+    //   ui.window.viewInsets.left,
+    //   ui.window.viewInsets.top,
+    //   ui.window.viewInsets.right,
+    //   ui.window.viewInsets.bottom
+    // ];
 
     return uiValues;
   }
