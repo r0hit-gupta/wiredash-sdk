@@ -57,7 +57,7 @@ class PlatformBuildInfo extends BuildInfo {
       _deviceId = prefs.getString(_prefsDeviceID);
     } else {
       _deviceId = _generateUUIDV4();
-      await prefs.setString(_prefsDeviceID, deviceId);
+      await prefs.setString(_prefsDeviceID, deviceId ?? '');
     }
 
     return deviceId;
